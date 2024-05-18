@@ -1,9 +1,27 @@
 body {
   background-color: #333;
+  overflow:hidden;
+}
+
+.scanlines{
+    content: "";
+    display:block;
+    position:absolute;
+    width:100%;
+    height:110%;
+    top:0;
+    left:0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(30, 59, 21, 0.5) .3%,
+      transparent 0.6%
+    );
+  animation: fudge 0.5s linear infinite;
 }
 .overlay{
-  width:100vw;
-  height:100vh;
+  width:100%;
+  height:100%;
   position:absolute;
   top:0;
   left:0;
@@ -12,11 +30,19 @@ body {
 
 .TerminalContainer{
   display:block;
-  background-color: #121;
+  background-color: rgb(25, 59, 28);
   width: 1200px;
   height: 900px;
   overflow:hidden;
   margin: 0 auto;
+}
+@keyframes fudge {
+  from {
+    transform: translate(0px, 0px);
+  }
+  to {
+    transform: translate(0px, 0.5%);
+  }
 }
 
 .history{
@@ -27,13 +53,24 @@ body {
   position:absolute;
   overflow:hidden;
   top:30px;
-  left:7%;
+  left:26%;
   line-height:0%;
+}
+
+#arrow{
+  display:block;
+  position:relative;
+  bottom:-923px;
+  left:5px;
+  color:rgba(0,0,0,0);
+  font-size:2em;
+  text-shadow:0 0 2px #15c21d;
 }
 
 input {
   display:block;
   bottom:-860px;
+  left:20px;
   position:relative;
   font-size:2em;
   max-width:98%;

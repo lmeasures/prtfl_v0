@@ -150,26 +150,28 @@ export const Terminal = () => {
 
   return (
     <>
-        <div className="TerminalContainer">
-          <div className="overlay" onClick={() => {document.getElementById("inputField")?.focus()}}/>
-          <input 
-            style={{width:`${commandInput.length+1}ch`}}
-            type="text" 
-            autoFocus
-            id="inputField"
-            value={commandInput}
-            onKeyDown={handleKeyPress}
-          />
-          <div className="history">
-          {history.map((command,i)=> {
-            return (
-              <div className="historyItem" key={i}>
-                <pre>{command}</pre>
-              </div>
-            )
-          })}
-          </div>
+      {/* <div className="TerminalContainer"> */}
+        <div className="overlay" onClick={() => {document.getElementById("inputField")?.focus()}}/>
+        <pre id="arrow">{">"}</pre>
+        <input 
+          style={{width:`${commandInput.length+1}ch`}}
+          type="text" 
+          autoFocus
+          id="inputField"
+          value={commandInput}
+          onKeyDown={handleKeyPress}
+        />
+        <div className="history">
+        {history.map((command,i)=> {
+          return (
+            <div className="historyItem" key={i}>
+              <pre>{command}</pre>
+            </div>
+          )
+        })}
         </div>
+        <div className="scanlines"/>
+      {/* </div> */}
     </>
   )
 }
