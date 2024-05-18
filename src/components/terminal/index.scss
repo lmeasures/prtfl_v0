@@ -1,0 +1,56 @@
+body {
+  background-color: #333;
+}
+.overlay{
+  width:100vw;
+  height:100vh;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index: 10;
+}
+
+.TerminalContainer{
+  display:block;
+  background-color: #121;
+  width: 1200px;
+  height: 900px;
+  overflow:hidden;
+  margin: 0 auto;
+}
+
+.history{
+  color:rgba(0,0,0,0);
+  text-shadow:0 0 2px #15c21d;
+  height:90%;
+  font-size:2em;
+  position:absolute;
+  overflow:hidden;
+  top:30px;
+  left:7%;
+  line-height:0%;
+}
+
+input {
+  display:block;
+  bottom:-860px;
+  position:relative;
+  font-size:2em;
+  max-width:98%;
+  background-color:rgba(0,0,0,0);
+  border:none;
+  border-right:15px solid transparent;
+  outline:none;
+  color:rgba(0,0,0,0);
+  text-shadow:0 0 2px #15c21d;
+  &:focus{
+    outline:none;
+    animation: Blinking 0.8s step-start forwards infinite;
+  }
+}
+
+@keyframes Blinking {
+  50% {
+    border-color: #15c21d;
+  }
+}
