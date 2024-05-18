@@ -1,15 +1,18 @@
 body {
-  background-color: #333;
+  background: black;
   overflow:hidden;
+  font-style:normal;
+  height:100vh;
+  width:100vw;
 }
 
-.scanlines{
+.tscanlines{
     content: "";
     display:block;
     position:absolute;
     width:100%;
     height:110%;
-    top:0;
+    top:-1%;
     left:0;
     background: repeating-linear-gradient(
       to bottom,
@@ -17,7 +20,8 @@ body {
       rgba(30, 59, 21, 0.5) .3%,
       transparent 0.6%
     );
-  animation: fudge 0.5s linear infinite;
+  animation: fudge 5s linear alternate infinite;
+  z-index: 9;
 }
 .overlay{
   width:100%;
@@ -41,7 +45,7 @@ body {
     transform: translate(0px, 0px);
   }
   to {
-    transform: translate(0px, 0.5%);
+    transform: translate(0px, 1%);
   }
 }
 
@@ -67,7 +71,7 @@ body {
   text-shadow:0 0 2px #15c21d;
 }
 
-input {
+.textinput {
   display:block;
   bottom:-860px;
   left:20px;

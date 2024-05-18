@@ -38,12 +38,14 @@ export const Terminal = () => {
   ]
 
   const splashScreen = [
-    "          ____ ___ ____ _ _  _ ____ ____ _   _ ____            ",
-    "          [__   |  |__/ | |_/  |___ [__   \\_/  [__             ",
-    "          ___]  |  |  \\ | | \\_ |___ ___]   |   ___]1.0         ",
+                                               
+    "         _____             _____ _____     ___     ___   ",
+    "        |     |___ ___ ___|     |   __|_ _|_  |   |   |  ",
+    "        | | | | -_| .'|_ -|  |  |__   | | |_| |_ _| | |  ",
+    "        |_|_|_|___|__,|___|_____|_____|\\_/|_____|_|___|  ",
+    "                     Lee Measures © 2024                       ",
     "                                                               ",
     "===============================================================",
-    "                     Lee Measures © 2024                       ",
     " _     _  _______  ___      _______  _______  __   __  _______ ",
     "| | _ | ||       ||   |    |       ||       ||  |_|  ||       |",
     "| || || ||    ___||   |    |       ||   _   ||       ||    ___|",
@@ -150,14 +152,14 @@ export const Terminal = () => {
 
   return (
     <>
-      {/* <div className="TerminalContainer"> */}
         <div className="overlay" onClick={() => {document.getElementById("inputField")?.focus()}}/>
         <pre id="arrow">{">"}</pre>
         <input 
+          className="textinput"
           style={{width:`${commandInput.length+1}ch`}}
           type="text" 
-          autoFocus
           id="inputField"
+          autoFocus
           value={commandInput}
           onKeyDown={handleKeyPress}
         />
@@ -170,8 +172,7 @@ export const Terminal = () => {
           )
         })}
         </div>
-        <div className="scanlines"/>
-      {/* </div> */}
+        <div className="tscanlines"/>
     </>
   )
 }
