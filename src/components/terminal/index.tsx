@@ -1,5 +1,6 @@
 import React from 'react';
 import './index.scss'
+import { subjectInfo } from '../../assets/textwalls/subjectInfo';
 
 
 export const Terminal = () => {
@@ -28,30 +29,29 @@ export const Terminal = () => {
       ]
     },
     "subject": {
-      lines: [
-        "Caution. Subject data partially corrupted."
-      ]
+      lines: subjectInfo
     }
   }
 
 
   const splashScreen = [
                                                
-    "         _____             _____ _____     ___     ___   ",
-    "        |     |___ ___ ___|     |   __|_ _|_  |   |   |  ",
-    "        | | | | -_| .'|_ -|  |  |__   | | |_| |_ _| | |  ",
-    "        |_|_|_|___|__,|___|_____|_____|\\_/|_____|_|___|  ",
-    `                     Lee Measures © ${new Date().getFullYear()}`,
+    "                 _____             _____ _____     ___     ___   ",
+    "                |     |___ ___ ___|     |   __|_ _|_  |   |   |  ",
+    "                | | | | -_| .'|_ -|  |  |__   | | |_| |_ _| | |  ",
+    "                |_|_|_|___|__,|___|_____|_____|\\_/|_____|_|___|  ",
+    `                             Lee Measures © ${new Date().getFullYear()}`,
     "                                                               ",
-    "===============================================================",
-    " _     _  _______  ___      _______  _______  __   __  _______ ",
-    "| | _ | ||       ||   |    |       ||       ||  |_|  ||       |",
-    "| || || ||    ___||   |    |       ||   _   ||       ||    ___|",
-    "|       ||   |___ |   |    |       ||  | |  ||       ||   |___ ",
-    "|       ||    ___||   |___ |      _||  |_|  ||       ||    ___|",
-    "|   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___ ",
-    "|__| |__||_______||_______||_______||_______||_|   |_||_______|",
-    "===============================================================",
+    "================================================================================",
+    "         _     _  _______  ___      _______  _______  __   __  _______ ",
+    "        | | _ | ||       ||   |    |       ||       ||  |_|  ||       |",
+    "        | || || ||    ___||   |    |       ||   _   ||       ||    ___|",
+    "        |       ||   |___ |   |    |       ||  | |  ||       ||   |___ ",
+    "        |       ||    ___||   |___ |      _||  |_|  ||       ||    ___|",
+    "        |   _   ||   |___ |       ||     |_ |       || ||_|| ||   |___ ",
+    "        |__| |__||_______||_______||_______||_______||_|   |_||_______|",
+    " ",
+    "================================================================================",
   ];
 
   React.useEffect(()=>{
@@ -71,7 +71,7 @@ export const Terminal = () => {
       " ",
       "Available Commands:",
       ...Object.values(commandList).map((item)=>{return `> ${item.command} - ${item.description}`}),
-      "===============================================================",
+      "================================================================================",
     ]
     addToHistory(helpLines)
   }
@@ -86,7 +86,6 @@ export const Terminal = () => {
   }
 
   const printMenu = (e: string) => {
-    console.log(e);
     if (e.split(" ").length > 2) {
       addToHistory(`Error. Too many parameters passed in command '${e}'`);
     }
@@ -165,9 +164,21 @@ export const Terminal = () => {
     else if(e.key === 'Backspace'){
       setCommandInput(commandInput.substring(0, commandInput.length-1));
     }
+    else if(e.key === 'PageDown'){
+      if(viewableHistory[1] <=250) {
+        setViewableHistory([viewableHistory[0]+5, viewableHistory[1]+5])
+      }
+    }
+    else if(e.key === 'PageUp'){
+      if(viewableHistory[0] >=5) {
+        setViewableHistory([viewableHistory[0]-5, viewableHistory[1]-5])
+      }
+    }
     else if (allowedKeys.indexOf(e.key) > -1 && commandInput.length < 50) {setCommandInput(commandInput + e.key)}
   }
 
+  console.log(history);
+  const viewableHistoryLines = history.splice(viewableHistory[0], viewableHistory[1]);
 
   return (
     <>
