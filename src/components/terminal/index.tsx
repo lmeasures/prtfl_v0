@@ -1,21 +1,37 @@
 import React from 'react';
 import './index.scss'
-import { subjectInfo } from '../../assets/textwalls/subjectInfo';
+import { loadingSubject, subjectInfo } from '../../assets/textwalls/subjectInfo';
 
 
 export const Terminal = () => {
+
   const [commandInput, setCommandInput] = React.useState<string>("");
   const [history, setHistory] = React.useState<Array<string>>([""]);
   const [failedCommands, setFailedCommands] = React.useState<number>(0);
 
+  const defaultViewableHistory = [
+    history.length-30 <=0 ? 0 : history.length-20,
+    history.length-30 <=0 ? 40 : history.length+20
+  ];
+
+  const [viewableHistory, setViewableHistory] = React.useState(defaultViewableHistory);
+
   React.useEffect(()=>{
     setHistory([]);
+    setViewableHistory(defaultViewableHistory);
   },[]);
 
-  const historyLength = 32;
+  const historyLength = 256;
 
   const allowedKeys="abcdefghijklmnopqrstuvwxyz0123456789/ ";
 
+  const sleep = (ms: number) => {
+    console.log(`sleeping for ${ms} milliseconds`)
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  const getRandomNumber = (min:number, max:number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   const menuList = {
     "main": {
@@ -24,12 +40,11 @@ export const Terminal = () => {
       ]
     },
     "logs": {
-      lines: [
-        "Log list corrupted. Providing most recently available log"
-      ]
+      // lines: lastLogEntry
     },
     "subject": {
-      lines: subjectInfo
+      lines: subjectInfo,
+      loading: loadingSubject
     }
   }
 
@@ -61,9 +76,23 @@ export const Terminal = () => {
   // command functions
   const clearScreen = () => {
     setHistory([]);
+    setViewableHistory(defaultViewableHistory);
   }
-  const resetScreen = () => {
+  const resetScreen = async () => {
+    setHistory(
+      [
+        " ",
+        " ",
+        " ",
+        " ",
+        "================================================================================",
+        "                           Performing Reset Action...",
+        "================================================================================",
+      ]
+    );
+    await sleep(getRandomNumber(250, 2500));
     setHistory(splashScreen);
+    setViewableHistory(defaultViewableHistory);
   }
   const printHelp = (e: string) => {
     const helpLines = [
@@ -72,6 +101,8 @@ export const Terminal = () => {
       "Available Commands:",
       ...Object.values(commandList).map((item)=>{return `> ${item.command} - ${item.description}`}),
       "================================================================================",
+      " ",
+      "Note: you can scroll through on-screen text by pressing PageUp & PageDown"
     ]
     addToHistory(helpLines)
   }
@@ -85,17 +116,17 @@ export const Terminal = () => {
     addToHistory(lines);
   }
 
-  const printMenu = (e: string) => {
+  const printMenu = async (e: string) => {
     if (e.split(" ").length > 2) {
       addToHistory(`Error. Too many parameters passed in command '${e}'`);
     }
     const menuName = e.split(" ")[1];
     // @ts-expect-error
-    const lines = menuList[menuName].lines;
-    addToHistory(lines);
+    setHistory(menuList[menuName].loading);
+    // @ts-expect-error
+    setHistory(menuList[menuName].lines);
   }
 
-  // !command functions
   const commandList = {
     "help": {
       command: "help",
@@ -155,6 +186,10 @@ export const Terminal = () => {
       ])
       setFailedCommands(failedCommands + 1);
     }
+    setViewableHistory([
+      history.length-30 <=0 ? 0 : history.length-20,
+      history.length-30 <=0 ? 40 : history.length+20
+    ])
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -165,20 +200,17 @@ export const Terminal = () => {
       setCommandInput(commandInput.substring(0, commandInput.length-1));
     }
     else if(e.key === 'PageDown'){
-      if(viewableHistory[1] <=250) {
+      if(viewableHistory[1] <=250 && history.length >= viewableHistory[1]) {
         setViewableHistory([viewableHistory[0]+5, viewableHistory[1]+5])
       }
     }
     else if(e.key === 'PageUp'){
-      if(viewableHistory[0] >=5) {
+      if(viewableHistory[0] >=5 ) {
         setViewableHistory([viewableHistory[0]-5, viewableHistory[1]-5])
       }
     }
     else if (allowedKeys.indexOf(e.key) > -1 && commandInput.length < 50) {setCommandInput(commandInput + e.key)}
   }
-
-  console.log(history);
-  const viewableHistoryLines = history.splice(viewableHistory[0], viewableHistory[1]);
 
   return (
     <>
@@ -195,7 +227,7 @@ export const Terminal = () => {
           onKeyDown={handleKeyPress}
         />
         <div className="history">
-        {history.map((command,i)=> {
+        {...history.slice(viewableHistory[0], viewableHistory[1]).map((command,i)=> {
           return (
             <div className="historyItem" key={i}>
               <pre>{command}</pre>
