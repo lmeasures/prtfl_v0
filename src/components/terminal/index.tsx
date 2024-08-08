@@ -1,41 +1,39 @@
 import React from 'react';
 import './index.scss'
 
-const menuEnum = {
-  0: "main",
-  1: "data",
-  
-}
 
 export const Terminal = () => {
   const [commandInput, setCommandInput] = React.useState<string>("");
   const [history, setHistory] = React.useState<Array<string>>([""]);
   const [failedCommands, setFailedCommands] = React.useState<number>(0);
-  const [currentMenu, setCurrentMenu] = React.useState<number>(0);
+
+  React.useEffect(()=>{
+    setHistory([]);
+  },[]);
 
   const historyLength = 32;
 
-  const allowedKeys="abcdefghijklmnopqrstuvwxyz0123456789/";
+  const allowedKeys="abcdefghijklmnopqrstuvwxyz0123456789/ ";
 
-  const hackedNotice = [
-  "  ░▒▓██████▓▒░░▒▓████████▓▒░▒▓████████▓▒░▒▓██████████████▓▒░░▒▓████████▓▒░░▒▓██████▓▒░ ░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓████████▓▒░░▒▓███████▓▒░      ░▒▓███████▓▒░░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░ ",
-  "  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░ ",
-  "  ░▒▓█▓▒░      ░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░             ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░       ░▒▓█▓▒▒▓█▓▒░  ",
-  "  ░▒▓█▓▒▒▓███▓▒░▒▓██████▓▒░    ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓██████▓▒░ ░▒▓████████▓▒░░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░░▒▓██████▓▒░  ░▒▓██████▓▒░       ░▒▓█▓▒░░▒▓█▓▒░▒▓██████▓▒░  ░▒▓█▓▒▒▓█▓▒░  ",
-  "  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ",
-  "  ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░         ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░      ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░             ░▒▓█▓▒░▒▓██▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░        ░▒▓█▓▓█▓▒░   ",
-  "   ░▒▓██████▓▒░░▒▓████████▓▒░  ░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓███████▓▒░ ░▒▓██████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓███████▓▒░░▒▓██▓▒░▒▓███████▓▒░░▒▓████████▓▒░  ░▒▓██▓▒░    ",
-  "                                                                                                                                                                                                        ",
-  ]
 
-  const bootSequence1 = [
-  "             _                                                  _             ",
-  "   __ _  ___| |_  /\/\   ___  __ _ ___ _   _ _ __ ___  ___   __| | _____   __ ",
-  "  / _` |/ _ \ __|/    \ / _ \/ _` / __| | | | '__/ _ \/ __| / _` |/ _ \ \ / / ",
-  " | (_| |  __/ |_/ /\/\ \  __/ (_| \__ \ |_| | | |  __/\__ \| (_| |  __/\ V /  ",
-  "  \__, |\___|\__\/    \/\___|\__,_|___/\__,_|_|  \___||___(_)__,_|\___| \_/   ",
-  "  |___/                                                                       ",
-  ]
+  const menuList = {
+    "main": {
+      lines: [
+        "Main Menu"
+      ]
+    },
+    "logs": {
+      lines: [
+        "Log list corrupted. Providing most recently available log"
+      ]
+    },
+    "subject": {
+      lines: [
+        "Caution. Subject data partially corrupted."
+      ]
+    }
+  }
+
 
   const splashScreen = [
                                                
@@ -43,7 +41,7 @@ export const Terminal = () => {
     "        |     |___ ___ ___|     |   __|_ _|_  |   |   |  ",
     "        | | | | -_| .'|_ -|  |  |__   | | |_| |_ _| | |  ",
     "        |_|_|_|___|__,|___|_____|_____|\\_/|_____|_|___|  ",
-    "                     Lee Measures © 2024                       ",
+    `                     Lee Measures © ${new Date().getFullYear()}`,
     "                                                               ",
     "===============================================================",
     " _     _  _______  ___      _______  _______  __   __  _______ ",
@@ -77,8 +75,25 @@ export const Terminal = () => {
     ]
     addToHistory(helpLines)
   }
-  const printMenuList = () => {
+  const printMenuList = (e: string) => {
+    const lines = [
+      `> ${e}`,
+      " ",
+      "List of Menus:",
+      ...Object.keys(menuList).map((item)=>{return `> ${item}`})
+    ]
+    addToHistory(lines);
+  }
 
+  const printMenu = (e: string) => {
+    console.log(e);
+    if (e.split(" ").length > 2) {
+      addToHistory(`Error. Too many parameters passed in command '${e}'`);
+    }
+    const menuName = e.split(" ")[1];
+    // @ts-expect-error
+    const lines = menuList[menuName].lines;
+    addToHistory(lines);
   }
 
   // !command functions
@@ -102,12 +117,12 @@ export const Terminal = () => {
       command: "menulist",
       description: "list available menus",
       function: printMenuList
+    },
+    "menu":{
+      command: "menu",
+      description: "Swap between menus. Usage: `menu <menu_name>`",
+      function: printMenu
     }
-    // "menu":{
-    //   command: "menu",
-    //   description: "swap between menus",
-    //   function: swapMenu
-    // }
   }
 
   const addToHistory = (text: string | Array<string>) => {
@@ -120,20 +135,24 @@ export const Terminal = () => {
   }
 
   const commandHandler = (command: string) => {
+    const fullCommand = command;
     if (command === "") {
       addToHistory(" ");
       return
     }
     setCommandInput("");
+    if (command.split(" ").length > 1){
+      command = command.split(" ")[0];
+    }
     if (Object.keys(commandList).includes(command)) {
       setFailedCommands(0);
       // @ts-expect-error
-      commandList[command].function(command);
+      commandList[command].function(fullCommand);
     }
     else {
       addToHistory([
         `> ${command}`,
-        `Command "${command}" not recognised. ${failedCommands > 1 ? "Try 'help'" : ""}`
+        `Command not recognised. ${failedCommands > 1 ? "Try 'help'" : ""}`
       ])
       setFailedCommands(failedCommands + 1);
     }
@@ -156,9 +175,10 @@ export const Terminal = () => {
         <pre id="arrow">{">"}</pre>
         <input 
           className="textinput"
-          style={{width:`${commandInput.length+1}ch`}}
+          style={{maxWidth:`${commandInput.length+1}ch`}}
           type="text" 
           id="inputField"
+          maxLength={15}
           autoFocus
           value={commandInput}
           onKeyDown={handleKeyPress}

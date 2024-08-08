@@ -12,10 +12,10 @@ function App() {
   }
 
   return (
-    <>
+    <div className="wrapper">
       {page === 0 && <Splashscreen callbackFn={callbackFn}/>}
       {page === 1 && <Terminal/>}
-    </>
+    </div>
   )
 }
 

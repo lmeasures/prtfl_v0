@@ -1,3 +1,11 @@
 body {
   background-color: #333;
 }
+
+.wrapper{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width:100vw;
+  height:100vh;
+}
